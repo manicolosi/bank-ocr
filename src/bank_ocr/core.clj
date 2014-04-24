@@ -32,7 +32,7 @@
 (defn parse [input]
   (let [char-set (character-set recognized-numbers)
         parsed-input (separate-numbers 3 3 (take 3 input))]
-    (apply str (map char-set parsed-input))))
+    (apply str (map #(get char-set %1 "?") parsed-input))))
 
 (defn int-seq
   [n]
