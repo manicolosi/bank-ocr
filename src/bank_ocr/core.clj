@@ -18,12 +18,16 @@
      "| |  | _| _||_||_ |_   ||_||_|"
      "|_|  ||_  _|  | _||_|  ||_| _|"]))
 
+(defn hash-map-with-index-values
+  [a-seq]
+  (reduce (fn [m [v k]] (assoc m k v)) {}
+          (map-indexed vector a-seq)))
+
 (defn character-set
   "A character set is a hash where the key is the character and the value is the
   number representing the character."
   [characters]
-  (reduce (fn [m [v k]] (assoc m k v)) {}
-          (map-indexed vector recognized-numbers)))
+  (hash-map-with-index-values recognized-numbers))
 
 (defn parse [input]
   (let [char-set (character-set recognized-numbers)
