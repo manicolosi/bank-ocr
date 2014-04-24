@@ -3,9 +3,9 @@
             [bank-ocr.core :refer :all]))
 
 (deftest recognized-numbers-test
-  (is (= (first recognized-numbers) [" _ "
-                                     "| |"
-                                     "|_|"])))
+  (is (= (first (:characters character-set)) [" _ "
+                                              "| |"
+                                              "|_|"])))
 
 (deftest parse-test
   (testing "legible"

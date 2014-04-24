@@ -8,14 +8,20 @@
 (defn separate-numbers
   "Takes a sequence of strings representing lines of a character set and
   re-arranges them into individual characters."
-  [char-width char-height lines]
-  (->> lines
+  [char-width char-height font-def]
+  (->> font-def
        (map (partial partition-string char-width))
        (apply interleave)
        (partition char-height)))
 
-(def recognized-numbers
-  (separate-numbers 3 3
+(defn create-character-set [char-width char-height font-def]
+  {:width char-width
+   :height char-height
+   :characters (separate-numbers char-width char-height font-def)})
+
+(def character-set
+  (create-character-set
+    3 3
     [" _     _  _     _  _  _  _  _ "
      "| |  | _| _||_||_ |_   ||_||_|"
      "|_|  ||_  _|  | _||_|  ||_| _|"]))
@@ -26,9 +32,10 @@
           (map-indexed vector a-seq)))
 
 (defn parse [input]
-  (let [char-set (hash-map-with-index-values recognized-numbers)
-        parsed-input (separate-numbers 3 3 (take 3 input))]
-    (apply str (map #(get char-set %1 "?") parsed-input))))
+  (let [{:keys [width height characters]} character-set
+        char-indices (hash-map-with-index-values characters)
+        parsed-input (separate-numbers width height (take height input))]
+    (apply str (map #(get char-indices %1 "?") parsed-input))))
 
 (defn int-seq
   [n]
@@ -62,7 +69,7 @@
 (defn process [filename]
   (with-open [reader (io/reader filename)
               writer (io/writer (str filename ".out"))]
-    (doseq [lines (partition 4 (line-seq reader))
+    (doseq [lines (partition (inc (:height character-set)) (line-seq reader))
             :let [account (parse lines)]]
       (write-account-number writer account))))
 
