@@ -17,3 +17,15 @@
     [" _     _  _     _  _  _  _  _ "
      "| |  | _| _||_||_ |_   ||_||_|"
      "|_|  ||_  _|  | _||_|  ||_| _|"]))
+
+(defn character-set
+  "A character set is a hash where the key is the character and the value is the
+  number representing the character."
+  [characters]
+  (reduce (fn [m [v k]] (assoc m k v)) {}
+          (map-indexed vector recognized-numbers)))
+
+(defn parse [input]
+  (let [char-set (character-set recognized-numbers)
+        parsed-input (separate-numbers 3 3 (take 3 input))]
+    (apply str (map char-set parsed-input))))
