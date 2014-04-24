@@ -23,14 +23,8 @@
   (reduce (fn [m [v k]] (assoc m k v)) {}
           (map-indexed vector a-seq)))
 
-(defn character-set
-  "A character set is a hash where the key is the character and the value is the
-  number representing the character."
-  [characters]
-  (hash-map-with-index-values recognized-numbers))
-
 (defn parse [input]
-  (let [char-set (character-set recognized-numbers)
+  (let [char-set (hash-map-with-index-values recognized-numbers)
         parsed-input (separate-numbers 3 3 (take 3 input))]
     (apply str (map #(get char-set %1 "?") parsed-input))))
 
@@ -41,9 +35,8 @@
 (defn valid?
   "Checksums a bank account number returns a truthy value if it is valid."
   [number]
-  (letfn [(checksum []
-            (->> (int-seq number)
-                 reverse
-                 (map-indexed (fn [i n] (* (inc i) n)))
-                 (reduce +)))]
-    (= (mod (checksum) 11) 0)))
+  (let [checksum (->> (int-seq number)
+                      reverse
+                      (map-indexed (fn [i n] (* (inc i) n)))
+                      (reduce +))]
+    (zero? (mod checksum 11))))
