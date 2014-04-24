@@ -35,3 +35,9 @@
   (testing "is not valid"
     (is (not (valid? "664371495")))
     (is (not (valid? "111111111")))))
+
+(deftest legibility
+  (testing "is legible"
+    (is (legible? "123456789")))
+  (testing "is illegible"
+    (is (not (legible? "12345678?")))))
